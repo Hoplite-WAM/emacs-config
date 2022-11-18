@@ -13,6 +13,7 @@
 (setq use-short-answers t)
 (setq confirm-kill-processes nil) 
 (setq-default cursor-type 'bar)
+(setq confirm-kill-emacs #'y-or-n-p)
 
 ;; Enable fuzzy search
 (require `ido)
