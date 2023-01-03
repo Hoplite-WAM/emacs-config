@@ -24,6 +24,8 @@
 (global-set-key (kbd "C-<up>") 'enlarge-window)
 ;; 
 
+(global-set-key (kbd "C-x C-d") `dired-jump) 
+
 ;; change arrow wrap around to dot
 (define-fringe-bitmap 'right-curly-arrow
   [#b00000000
