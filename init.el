@@ -7,17 +7,50 @@
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (setq initial-scratch-message "")
-(toggle-frame-fullscreen)
+;; (toggle-frame-fullscreen)
 (show-paren-mode t)
 (global-hl-line-mode 1)
 (setq use-short-answers t)
 (setq confirm-kill-processes nil) 
 (setq-default cursor-type 'bar)
 (setq confirm-kill-emacs #'y-or-n-p)
+(split-window-horizontally)
+(global-set-key (kbd "M-o") 'ace-window)
+
+;; shortcuts for resizing frames
+(global-set-key (kbd "C-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "C-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "C-<down>") 'shrink-window)
+(global-set-key (kbd "C-<up>") 'enlarge-window)
+;; 
+
+;; change arrow wrap around to dot
+(define-fringe-bitmap 'right-curly-arrow
+  [#b00000000
+   #b00000000
+   #b00000000
+   #b00000000
+   #b01110000
+   #b00010000
+   #b00010000
+   #b00000000])
+(define-fringe-bitmap 'left-curly-arrow
+  [#b00000000
+   #b00001000
+   #b00001000
+   #b00001110
+   #b00000000
+   #b00000000
+   #b00000000
+   #b00000000])
+;; 
 
 ;; Enable fuzzy search
 (require `ido)
 (ido-mode t)
+;; Automatically enable dired and create hook for all dired buffers to hide details mode 
+(add-hook 'dired-mode-hook #'dired-hide-details-mode)
+(dired "~/")
 
 ;; === Package Management ===
 (require `package)
@@ -43,16 +76,17 @@
 
 ;; === ===
 
+
+
 ;; Wheatgrass theme
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (wheatgrass)))
+ '(custom-enabled-themes '(modus-vivendi))
  '(package-selected-packages
-   (quote
-    (gdscript-mode which-key try use-package xclip textsize recentf-ext python-black projectile pdf-tools magit key-chord helm evil eglot company blacken avy))))
+   '(gdscript-mode which-key try use-package xclip textsize recentf-ext python-black projectile pdf-tools magit key-chord helm evil eglot company blacken avy)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -87,6 +121,12 @@
   (run-with-idle-timer 4.0 t #'evil-normalize-all-buffers)
   "Drop back to normal state after idle for 4.0 seconds.")
 
+;; indicate mode by cursor color
+(setq evil-default-cursor (quote (t "#750000"))
+    evil-visual-state-cursor '("#7b1fa2" box)
+    evil-normal-state-cursor '("#878787" box)
+    evil-insert-state-cursor '("#e27300" box)
+    )
 ;; === ===
 
 ;; === Python-Configuration ==
