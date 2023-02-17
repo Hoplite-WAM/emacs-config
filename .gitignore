@@ -1,0 +1,8 @@
+# Ignore
+/*
+
+#But not
+!.gitignore
+!init.el
+!init-notes.org
+!elpa/
