@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: 2D Position
+# key: xy
+# --
+x = $1
+y = $2

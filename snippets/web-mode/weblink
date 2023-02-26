@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: link
+# key: wbl
+# --
+<a href="`(current-kill 0)`">${1:alt}</a>$0

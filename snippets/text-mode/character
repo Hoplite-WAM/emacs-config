@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Character-Template
+# key: c1 h
+# --	2
+WASAP `(random 33)`

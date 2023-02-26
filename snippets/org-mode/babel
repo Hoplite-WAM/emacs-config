@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: babel-block
+# key: babel
+# --
+
+#+begin_src ${1:type} :results output
+    $0
+#+end_src

@@ -1,4 +1,4 @@
-;; Useful Defaults
+;; === Useful Defaults ===
 (setq inhibit-splash-screen t)
 (setq inhibit-start-up-message t)
 (tool-bar-mode -1)
@@ -34,7 +34,13 @@
 (global-set-key (kbd "C--") `textsize-decrement)
 (global-set-key (kbd "C-=") `textsize-increment)
 (global-hide-mode-line-mode)
-
+(global-flycheck-mode)
+;; Very important! Sets tabs and indents to 2 globally!
+(setq-default tab-width 2)
+(setq standard-indent 2)
+(setq-default evil-shift-width 2)
+(setq-default indent-tabs-mode nil)
+;; ===
 ;; (add-to-list 'load-path "~/.emacs.d/lisp/")
 ;; (require `bookmark+)
 
@@ -62,13 +68,35 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(css-indent-offset 2)
  '(custom-enabled-themes '(modus-vivendi))
  '(fringe-mode 0 nil (fringe))
  '(helm-minibuffer-history-key "M-p")
+ '(js-indent-level 2)
+ '(org-agenda-custom-commands
+   '(("n" "My Custom View"
+      ((agenda "" nil)
+       (todo "WAITING"
+             ((org-agenda-overriding-header "Waiting")
+              (org-agenda-prefix-format "  ")))
+       (todo "WHEN-FREE"
+             ((org-agenda-overriding-header "Free Time")
+              (org-agenda-prefix-format "  ")))
+       (todo "DEADLINE"
+             ((org-agenda-overriding-header "Important Dates")
+              (org-agenda-prefix-format "   %s ")))
+       (todo "UNSCHEDULED"
+             ((org-agenda-overriding-header "Unplanned"))))
+      nil)))
+ '(org-agenda-prefix-format
+   '((agenda . "--- %s %t - ")
+     (todo . " %i %-12:c")
+     (tags . " %i %-12:c")
+     (search . " %i %-12:c")))
  '(package-selected-packages
-   '(aggressive-indent evil-numbers
-		       (\, hide-mode-line)
-		       evil-snipe helm hydra buffer-move yaml-mode highlight-indentation eat web-mode expand-region dired-toggle-sudo rg calfw-org calfw-cal calfw evil-surround heaven-and-hell dired-launch workgroups2 cider xclip workgroups which-key use-package try textsize recentf-ext rainbow-delimiters python-black projectile popup peep-dired pdf-tools olivetti magit key-chord gdscript-mode evil-collection eglot company blacken async ace-window)))
+   '(evil-matchit evil-exchange evil-args yasnippet evil-numbers
+                  (\, hide-mode-line)
+                  evil-snipe helm hydra buffer-move yaml-mode highlight-indentation eat web-mode expand-region dired-toggle-sudo rg calfw-org calfw-cal calfw evil-surround heaven-and-hell dired-launch workgroups2 cider xclip workgroups which-key use-package try textsize recentf-ext rainbow-delimiters python-black projectile popup peep-dired pdf-tools olivetti magit key-chord gdscript-mode evil-collection eglot company blacken async ace-window)))
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -77,18 +105,18 @@
 
 ;; === Company Mode ===
 (global-company-mode)
-					; No delay in showing suggestions.
+          ; No delay in showing suggestions.
 (setq company-idle-delay 0)
 (setq company-selection-wrap-around t)
-					; Use tab key to cycle through suggestions.
-					; ('tng' means 'tab and go')
-(company-tng-configure-default)
+          ; Use tab key to cycle through suggestions.
+          ; ('tng' means 'tab and go')
 ;; === --- ===
 
 
 ;; === Major Mode Hooks ===
 
 (add-hook `before-save-hook `delete-trailing-whitespace)
+;; (add-hook `evil-insert-state-exit-hook (lambda () (untabify (point-min) (point-max))))
 
 ;; Dired
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
@@ -107,7 +135,18 @@
 ;; Prog
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
-(add-hook 'prog-mode-hook 'aggressive-indent-mode)
+
+;; Snippet Mode
+(require 'yasnippet)
+(add-hook `yas-after-exit-snippet-hook `evil-normal-state)
+(setq yas-snippet-dirs
+      `("~/.emacs.d/snippets"
+  ))
+(yas-global-mode 1)
+
+;; Config mode
+(add-hook 'conf-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'conf-mode-hook #'display-line-numbers-mode)
 
 ;; Text
 (add-hook `text-mode-hook `visual-line-mode)
@@ -123,12 +162,11 @@
 (add-hook 'yaml-mode-hook 'highlight-indentation-mode)
 (add-hook 'yaml-mode-hook 'whitespace-mode)
 (add-hook 'yaml-mode-hook
-	  (lambda()
-	    (add-hook 'evil-insert-state-exit-hook `delete-trailing-whitespace)))
+    (lambda()
+      (add-hook 'evil-insert-state-exit-hook `delete-trailing-whitespace)))
 
 ;; Web
 (add-hook 'web-mode-hook 'highlight-indentation-mode)
-
 ;; === --- ===
 
 ;; === Window & Buffer Management ===
@@ -171,6 +209,7 @@
 (setq evil-want-keybinding nil)
 ;; (setq evil-want-minibuffer t)
 (require `evil-numbers)
+(global-evil-matchit-mode 1)
 
 (evil-mode)
 (evil-collection-init)
@@ -222,8 +261,6 @@
 (define-key evil-motion-state-map (kbd "SPC") 'avy-goto-char-timer)
 (define-key evil-motion-state-map (kbd "|") `helm-all-mark-rings)
 (define-key evil-motion-state-map (kbd "\\") 'evil-jump-backward-swap)
-;; (define-key evil-motion-state-map (kbd "C-j") 'evil-avy-goto-line-below)
-;; (define-key evil-motion-state-map (kbd "C-k") 'evil-avy-goto-line-above)
 ;; (define-key evil-motion-state-map (kbd "C-j") 'evil-jump-backward)
 ;; (define-key evil-motion-state-map (kbd "C-k") 'evil-jump-forward)
 ;; (define-key evil-motion-state-map (kbd "C-j") 'evil-normal-state)
@@ -235,21 +272,144 @@
 (define-key evil-motion-state-map (kbd "C-S-f") 'scroll-other-window)
 (define-key evil-motion-state-map (kbd "C-S-b") 'scroll-other-window-down)
 (define-key evil-motion-state-map (kbd "RET") nil)
+(define-key evil-motion-state-map (kbd "DEL") nil)
 ;; (define-key evil-motion-state-map (kbd "C-u u") `universal-argument)
 (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
 (define-key evil-normal-state-map (kbd "C-a") 'rectangle-number-lines)
 
+(define-key evil-normal-state-map (kbd "C-1") (kbd "!"))
+(define-key evil-normal-state-map (kbd "C-1") (kbd "!"))
+(define-key evil-normal-state-map (kbd "C-2") (kbd "@"))
+(define-key evil-normal-state-map (kbd "C-3") (kbd "#"))
+(define-key evil-normal-state-map (kbd "C-4") (kbd "$"))
+(define-key evil-normal-state-map (kbd "C-5") (kbd "%"))
+(define-key evil-normal-state-map (kbd "C-6") (kbd "^"))
+(define-key evil-normal-state-map (kbd "C-7") (kbd "&"))
+(define-key evil-normal-state-map (kbd "C-8") (kbd "*"))
+(define-key evil-normal-state-map (kbd "C-9") (kbd "("))
+(define-key evil-normal-state-map (kbd "C-0") (kbd ")"))
+
+(define-key evil-visual-state-map (kbd "C-2") (kbd "@"))
+(define-key evil-visual-state-map (kbd "C-3") (kbd "#"))
+(define-key evil-visual-state-map (kbd "C-4") (kbd "$"))
+(define-key evil-visual-state-map (kbd "C-5") (kbd "%"))
+(define-key evil-visual-state-map (kbd "C-6") (kbd "^"))
+(define-key evil-visual-state-map (kbd "C-7") (kbd "&"))
+(define-key evil-visual-state-map (kbd "C-8") (kbd "*"))
+(define-key evil-visual-state-map (kbd "C-9") (kbd "("))
+(define-key evil-visual-state-map (kbd "C-0") (kbd ")"))
+
+;; === Evil Args ===
+;; bind evil-args text objects
+(define-key evil-inner-text-objects-map "a" 'evil-inner-arg)
+(define-key evil-outer-text-objects-map "a" 'evil-outer-arg)
+
+;; == custom - function start ==
+(defun evil-args--forward-opener (&optional count)
+  (let ((openers-regexp (regexp-opt evil-args-openers))
+  (closers-regexp (regexp-opt evil-args-closers))
+  (openers-and-closers-regexp (regexp-opt (append evil-args-openers
+              evil-args-closers)))
+  (end -1)
+  (count (or count 1)))
+    (save-excursion
+      (while (> count 0)
+  ;; search forward for an opener
+  (if (not (re-search-forward openers-and-closers-regexp nil t))
+            ;; not found (do nothing more)
+            (setq count 0)
+    ;; found
+    (backward-char)
+    ;; if looking at a closer (stop)
+    (if (looking-at-p closers-regexp)
+              (setq count 0)
+            ;; if looking at an opener
+            (setq end (+ (point) 1))
+            (forward-char)
+            (setq count (- count 1)))
+    )))
+    (if (> end 0) (goto-char end))))
+
+;;;###autoload
+(defun evil-ump-in-args (count)
+  "Move the cursor in the next enclosing matching pairs."
+  (interactive "p")
+  (evil-args--forward-opener count))
+;; == custom - function end ==
+
+;; bind evil-forward/backward-args
+(define-key evil-normal-state-map "/" 'evil-forward-arg)
+(define-key evil-normal-state-map "/" 'evil-forward-arg)
+(define-key evil-motion-state-map "?" 'evil-backward-arg)
+(define-key evil-motion-state-map "?" 'evil-backward-arg)
+
+;; bind evil-jump-out-args
+(define-key evil-normal-state-map "N" 'evil-jump-out-args)
+(define-key evil-normal-state-map "n" 'evil-jump-in-args)
+
+(require `evil-args)
+(require `evil-exchange)
+(evil-exchange-install)
+
+(defun evil-args--forward-opener (&optional count)
+  (let ((openers-regexp (regexp-opt evil-args-openers))
+    (closers-regexp (regexp-opt evil-args-closers))
+    (openers-and-closers-regexp (regexp-opt (append evil-args-openers
+                            evil-args-closers)))
+    (end -1)
+    (count (or count 1)))
+    (save-excursion
+      (while (> count 0)
+    ;; search forward for an opener
+    (if (not (re-search-forward openers-and-closers-regexp nil t))
+        ;; not found (do nothing more)
+        (setq count 0)
+      ;; found
+      (backward-char)
+      ;; if looking at a closer (stop)
+      (if (looking-at-p closers-regexp)
+          (setq count 0)
+        ;; if looking at an opener
+        (setq end (+ (point) 1))
+        (forward-char)
+        (setq count (- count 1)))
+      )))
+    (if (> end 0) (goto-char end))))
+
+
+
+
+;;;###autoload
+(defun evil-jump-in-args (count)
+  "Move the cursor in the next enclosing matching pairs."
+  (interactive "p")
+  (evil-args--forward-opener count))
+
+;; === -End of Evil Args- ===
+
 ;; = Insert state Bindings =
 (define-key evil-insert-state-map (kbd "C-g") `evil-normal-state)
+
+(defun my-new-line-and-normal-state ()
+  "Create a new and line and go to enter state"
+  (interactive)
+  (progn
+    (newline)
+    (evil-normal-state)))
+
+;; can disable this for ielm and terminals
+;; Maybe ONLY enable for programming
+;; (define-key evil-insert-state-map (kbd "RET") `my-new-line-and-normal-state)
+
 ;; Add a shortcut for rectangle number stuff and
 ;; Set rectangle--default-line-number-format so no space
 ;; https://emacs.stackexchange.com/questions/27621/how-to-supply-universal-argument-c-u-to-a-function-call-inside-a-binding-state
 
 ;; (global-set-key (kbd "C-x r N")
 ;;   (lamda() (interactive)
-;; 	(let ((current-prefix-arg 1))
-;; 	  (call-interactively #`rectangle-number-lines))))
+;;  (let ((current-prefix-arg 1))
+;;    (call-interactively #`rectangle-number-lines))))
 
 
 (setq key-chord-two-keys-delay 0.5)
@@ -259,6 +419,17 @@
 
 
 ;; == Misc Packages ==
+
+;; Web related things : web-mode
+(require `web-mode)
+;; (setq web-mode-indent-style 2)
+;; https://web-mode.org/
+(setq web-mode-enable-current-element-highlight t)
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.js?\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
+;; ===
+
 
 (which-key-mode)
 
@@ -311,9 +482,9 @@
        (boundp 'hl-sentence-extent)
        hl-sentence-extent
        (move-overlay hl-sentence-extent
-		     (hl-sentence-begin-pos)
-		     (hl-sentence-end-pos)
-		     (current-buffer))))
+         (hl-sentence-begin-pos)
+         (hl-sentence-end-pos)
+         (current-buffer))))
 
 (setq hl-sentence-extent (make-overlay 0 0))
 (overlay-put hl-sentence-extent 'face 'hl-sentence)
@@ -330,18 +501,36 @@
 (define-key winner-mode-map (kbd "C-S-u") `winner-undo)
 (define-key winner-mode-map (kbd "C-S-r") `winner-redo)
 
-;; Org-mode Configurations
-(setq org-agenda-files `("~/Documents/org/Deadlines.org"
-			 "~/Documents/org/Inbox.org"
-			 "~/Documents/org/School.org"
-			 "~/Documents/org/Projects.org"
-			 ))
+;; === Org-mode Configurations ===
+(global-set-key (kbd "C-c a") `org-agenda)
+(setq org-agenda-start-on-weekday nil)
+(setq org-agenda-files `("~/Documents/Dropbox/org/Deadlines.org"
+       "~/Documents/Dropbox/org/Inbox.org"
+       "~/Documents/Dropbox/org/School.org"
+       "~/Documents/Dropbox/org/Projects.org"
+       "~/Documents/Dropbox/org/Appointments.org"
+       ))
 (setq org-todo-keywords
-      '((sequence "TODO" "PROJECT"  "|" "DONE" "REVIEW")))
+      '((sequence "WAITING" "APPOINTMENT" "DEADLINE" "UNSCHEDULED" "WHEN-FREE" "GET-DONE" "NEXT" "PROJECT" "GOAL" "|" "DONE", "CANCELED")))
 (setq org-startup-folded t)
-;; (setq org-agenda-skip-deadline-if-done t)
-;; (org-babel-do-load-languages '((emacs-lisp . t) (shell . t)))
-;; (org-confirm-babel-evaluate nil)
+(setq org-todo-keyword-faces
+      '(("UNSCHEDULED" . "grey")
+  ("PROJECT" . "#cf40cd")
+  ("WAITING" . "#469DE9")
+  ("NEXT" . "yellow")
+  ("CANCELED" . "#663300")
+  ("WHEN-FREE" . "#E79BE8")
+   ))
+
+(org-babel-do-load-languages
+    'org-babel-load-languages
+    '(
+    (shell . t)
+    ))
+
+;; (org-babel-confirm-evaluate nil)
+
+;; === End of Org Configuration ===
 
 
 ;; == Change between light and dark themes
@@ -357,17 +546,17 @@
 (global-set-key (kbd "C-c 8") 'heaven-and-hell-toggle-theme)
 ;; ====
 
-
 ;; === Expand region config
 (require 'expand-region)
 (define-key evil-motion-state-map (kbd "S-SPC") 'er/expand-region)
 (define-key evil-visual-state-map (kbd "S-SPC") 'er/expand-region)
 ;; ==
 
-;; Web related things : web-mode
-(require `web-mode)
-;; https://web-mode.org/
-(setq web-mode-enable-current-element-highlight t)
+;; Start Server
+(server-start)
+
+(require `calfw)
+(require `calfw-org)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 ;; (add-to-list 'auto-mode-alist '("\\.js?\\'" . web-mode))
 ;; (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
@@ -375,3 +564,29 @@
 
 ;; Start Server
 (server-start)
+
+
+(require `calfw)
+(require `calfw-org)
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.js?\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
+;; ===
+
+;; Start Server
+(server-start)
+
+
+(require `calfw)
+(require `calfw-org)
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.js?\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
+;; ===
+
+;; Start Server
+(server-start)
+
+
+(require `calfw)
+(require `calfw-org)

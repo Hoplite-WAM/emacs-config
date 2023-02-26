@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: tag-multiple-lines
+# key: tt
+# --
+<$1>
+  $0
+</$1>

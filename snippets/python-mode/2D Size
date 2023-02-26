@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: 2D size
+# key: wh
+# --
+width = $1
+height = $2
