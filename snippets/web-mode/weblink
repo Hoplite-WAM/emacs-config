@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: link
-# key: wbl
+# key: ll
 # --
 <a href="`(current-kill 0)`">${1:alt}</a>$0

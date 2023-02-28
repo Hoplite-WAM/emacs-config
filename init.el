@@ -41,7 +41,8 @@
 (setq-default evil-shift-width 2)
 (setq-default indent-tabs-mode nil)
 ;; ===
-;; (add-to-list 'load-path "~/.emacs.d/lisp/")
+;; (add-to-list 'load-path
+;; "~/.emacs.d/lisp/")
 ;; (require `bookmark+)
 
 ;; === Helm ===
@@ -83,8 +84,12 @@
              ((org-agenda-overriding-header "Free Time")
               (org-agenda-prefix-format "  ")))
        (todo "DEADLINE"
-             ((org-agenda-overriding-header "Important Dates")
-              (org-agenda-prefix-format "   %s ")))
+             ((org-agenda-overriding-header "")
+              (org-agenda-overriding-header "Important Dates")
+              (org-agenda-prefix-format " %s ")))
+       (todo "GET-DONE"
+             ((org-agenda-overriding-header "Get Done")
+              (org-agenda-prefix-format "  ")))
        (todo "UNSCHEDULED"
              ((org-agenda-overriding-header "Unplanned"))))
       nil)))
@@ -94,9 +99,9 @@
      (tags . " %i %-12:c")
      (search . " %i %-12:c")))
  '(package-selected-packages
-   '(evil-matchit evil-exchange evil-args yasnippet evil-numbers
-                  (\, hide-mode-line)
-                  evil-snipe helm hydra buffer-move yaml-mode highlight-indentation eat web-mode expand-region dired-toggle-sudo rg calfw-org calfw-cal calfw evil-surround heaven-and-hell dired-launch workgroups2 cider xclip workgroups which-key use-package try textsize recentf-ext rainbow-delimiters python-black projectile popup peep-dired pdf-tools olivetti magit key-chord gdscript-mode evil-collection eglot company blacken async ace-window)))
+   '(undo-tree evil-matchit evil-exchange evil-args yasnippet evil-numbers
+               (\, hide-mode-line)
+               evil-snipe helm hydra buffer-move yaml-mode highlight-indentation eat web-mode expand-region dired-toggle-sudo rg calfw-org calfw-cal calfw evil-surround heaven-and-hell dired-launch workgroups2 cider xclip workgroups which-key use-package try textsize recentf-ext rainbow-delimiters python-black projectile popup peep-dired pdf-tools olivetti magit key-chord gdscript-mode evil-collection eglot company blacken async ace-window)))
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -184,6 +189,11 @@
 (global-set-key (kbd "C-S-h")   'buf-move-left)
 (global-set-key (kbd "C-S-l")  'buf-move-right)
 ;; Toggle Horizontal and Vertical Buffers function
+
+(winner-mode)
+(define-key winner-mode-map (kbd "C-S-u") `winner-undo)
+(define-key winner-mode-map (kbd "C-S-r") `winner-redo)
+
 (defun window-split-toggle ()
   "Toggle between horizontal and vertical split with two windows."
   (interactive)
@@ -199,7 +209,7 @@
         (switch-to-buffer (other-buffer))))))
 ;; === --- ===
 
-; === evil mode configuarion ===
+; === Evil mode configuarion ===
 
 (setq evil-want-C-u-scroll t)
 (setq evil-respect-visual-line-mode t)
@@ -207,15 +217,18 @@
 (setq evil-move-beyond-eol t)
 (setq evil-move-cursor-back nil)
 (setq evil-want-keybinding nil)
+(require `undo-tree)
+(global-undo-tree-mode)
+(setq evil-undo-system `undo-tree)
 ;; (setq evil-want-minibuffer t)
 (require `evil-numbers)
 (global-evil-matchit-mode 1)
+(setq evil-jumps-cross-buffers nil)
 
 (evil-mode)
 (evil-collection-init)
 (global-evil-surround-mode 1)
 (evil-snipe-mode 1)
-
 
 ;; indicate mode by cursor color
 (setq evil-default-cursor (quote (t "#750000"))
@@ -259,24 +272,21 @@
 
 ;; = Motion state Bindings =
 (define-key evil-motion-state-map (kbd "SPC") 'avy-goto-char-timer)
-(define-key evil-motion-state-map (kbd "|") `helm-all-mark-rings)
-(define-key evil-motion-state-map (kbd "\\") 'evil-jump-backward-swap)
-;; (define-key evil-motion-state-map (kbd "C-j") 'evil-jump-backward)
-;; (define-key evil-motion-state-map (kbd "C-k") 'evil-jump-forward)
-;; (define-key evil-motion-state-map (kbd "C-j") 'evil-normal-state)
-(define-key evil-motion-state-map (kbd "U") 'undo-redo)
-;; (define-key evil-motion-state-map (kbd "f") 'evil-snipe-s)
-;; (define-key evil-motion-state-map (kbd "F") 'evil-snipe-S)
-;; (define-key evil-motion-state-map (kbd "t") 'evil-snipe-x)
-;; (define-key evil-motion-state-map (kbd "T") 'evil-snipe-X)
+(define-key evil-motion-state-map (kbd "C-SPC") `helm-buffers-list)
+;; (define-key evil-motion-state-map (kbd "|") `helm-all-mark-rings)
+;; (define-key evil-motion-state-map (kbd "\\") 'evil-jump-backward-swap)
+(define-key evil-motion-state-map (kbd "|") `helm-global-mark-ring)
+(define-key evil-motion-state-map (kbd "\\") `helm-mark-ring)
 (define-key evil-motion-state-map (kbd "C-S-f") 'scroll-other-window)
 (define-key evil-motion-state-map (kbd "C-S-b") 'scroll-other-window-down)
 (define-key evil-motion-state-map (kbd "RET") nil)
 (define-key evil-motion-state-map (kbd "DEL") nil)
+(define-key evil-normal-state-map (kbd "DEL") nil)
 ;; (define-key evil-motion-state-map (kbd "C-u u") `universal-argument)
 (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
 (define-key evil-normal-state-map (kbd "C-a") 'rectangle-number-lines)
+;; (define-key evil-motion-state-map (kbd "M-y") 'yank-pop)
 
 (define-key evil-normal-state-map (kbd "C-1") (kbd "!"))
 (define-key evil-normal-state-map (kbd "C-1") (kbd "!"))
@@ -332,7 +342,7 @@
     (if (> end 0) (goto-char end))))
 
 ;;;###autoload
-(defun evil-ump-in-args (count)
+(defun evil-jump-in-args (count)
   "Move the cursor in the next enclosing matching pairs."
   (interactive "p")
   (evil-args--forward-opener count))
@@ -378,8 +388,6 @@
     (if (> end 0) (goto-char end))))
 
 
-
-
 ;;;###autoload
 (defun evil-jump-in-args (count)
   "Move the cursor in the next enclosing matching pairs."
@@ -415,7 +423,22 @@
 (setq key-chord-two-keys-delay 0.5)
 (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
 (key-chord-mode 1)
-;; === --- ===
+
+;; == Creates Marks for j and k greater than 1 line away
+;; https://www.reddit.com/r/emacs/comments/8flkrg/evil_add_numbered_movement_to_the_jump_list/
+(defun my-jump-advice (oldfun &rest args)
+  "Creates Marks for j and k greater than 1 line away"
+  (let ((old-pos (point)))
+    (apply oldfun args)
+    (when (> (abs (- (line-number-at-pos old-pos) (line-number-at-pos (point))))
+             1)
+      (evil-set-jump old-pos))))
+
+(advice-add 'evil-next-line :around #'my-jump-advice)
+(advice-add 'evil-previous-line :around #'my-jump-advice)
+;; == --- ==
+
+;; === --- End of Evil Configuration --- ===
 
 
 ;; == Misc Packages ==
@@ -494,13 +517,6 @@
 ;;                     :foreground "#444")
 
 ;; === --- ===
-
-
-
-(winner-mode)
-(define-key winner-mode-map (kbd "C-S-u") `winner-undo)
-(define-key winner-mode-map (kbd "C-S-r") `winner-redo)
-
 ;; === Org-mode Configurations ===
 (global-set-key (kbd "C-c a") `org-agenda)
 (setq org-agenda-start-on-weekday nil)
@@ -552,9 +568,6 @@
 (define-key evil-visual-state-map (kbd "S-SPC") 'er/expand-region)
 ;; ==
 
-;; Start Server
-(server-start)
-
 (require `calfw)
 (require `calfw-org)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -564,29 +577,9 @@
 
 ;; Start Server
 (server-start)
-
-
-(require `calfw)
-(require `calfw-org)
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-;; (add-to-list 'auto-mode-alist '("\\.js?\\'" . web-mode))
-;; (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
-;; ===
-
-;; Start Server
-(server-start)
-
-
-(require `calfw)
-(require `calfw-org)
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-;; (add-to-list 'auto-mode-alist '("\\.js?\\'" . web-mode))
-;; (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
-;; ===
-
-;; Start Server
-(server-start)
-
-
-(require `calfw)
-(require `calfw-org)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

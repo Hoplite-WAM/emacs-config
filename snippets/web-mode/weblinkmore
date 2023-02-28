@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: link more
-# key: mwbl
+# key: mll
 # --
 <a href="`(current-kill 0)`" target="${2:$$(yas-choose-value '("_self" "_blank" "_parent" "_top"))}">${1:alt}</a>$0

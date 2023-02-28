@@ -1,0 +1,11 @@
+(undo-tree-save-format-version . 1)
+"874f2ab7da565b6abe07f9211fa8b96552316f49"
+[nil nil nil nil (25594 61144 163392 879000) 0 nil]
+([nil nil ((71 . 72) (t 25590 18041 665581 176000)) nil (25594 61144 163390 992000) 0 nil])
+([nil nil ((nil rear-nonsticky nil 91 . 92) (#("
+" 0 1 (fontified nil)) . -412) (91 . 413) 72) nil (25594 61144 163388 306000) 0 nil])
+([nil nil ((#("WASAP `(random 33)`
+" 0 7 (fontified t) 7 8 (fontified t face (rainbow-delimiters-depth-1-face)) 8 17 (fontified t) 17 18 (fontified t face (rainbow-delimiters-depth-1-face)) 18 19 (fontified t) 19 20 (fontified t rear-nonsticky t)) . 72) (undo-tree-id10 . -20) (undo-tree-id11 . -20) (undo-tree-id12 . -20)) nil (25594 61144 163384 213000) 0 nil])
+([nil current ((#("
+" 0 1 (fontified t)) . 71) (undo-tree-id0 . -1) (undo-tree-id1 . -1) (undo-tree-id2 . -1) (undo-tree-id3 . -1) (undo-tree-id4 . -1) (undo-tree-id5 . -1) (undo-tree-id6 . -1) (undo-tree-id7 . -1) (undo-tree-id8 . -1) (undo-tree-id9 . -1)) nil (25594 61144 163373 558000) 0 nil])
+nil
