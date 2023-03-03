@@ -10,6 +10,7 @@
 (setq use-short-answers t)
 (setq confirm-kill-processes nil)
 (setq-default cursor-type 'bar)
+(blink-cursor-mode 0)
 (setq confirm-kill-emacs #'y-or-n-p)
 (global-set-key (kbd "C-x o") 'ace-window)
 (save-place-mode 1)
@@ -43,7 +44,7 @@
 ;; ===
 ;; (add-to-list 'load-path
 ;; "~/.emacs.d/lisp/")
-;; (require `bookmark+)
+;; (require 'bookmark+)
 
 ;; === Helm ===
 (require `helm)
@@ -69,6 +70,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(bmkp-last-as-first-bookmark-file "~/.emacs.d/bookmarks")
  '(css-indent-offset 2)
  '(custom-enabled-themes '(modus-vivendi))
  '(fringe-mode 0 nil (fringe))
@@ -76,20 +78,29 @@
  '(js-indent-level 2)
  '(org-agenda-custom-commands
    '(("n" "My Custom View"
-      ((agenda "" nil)
+      ((agenda ""
+               ((org-agenda-span 1)
+                (org-deadline-warning-days 3)))
+       (agenda ""
+               ((org-agenda-overriding-header "Important Dates")
+                (org-agenda-span 1)
+                (org-deadline-warning-days 1000)
+                (org-agenda-show-all-dates nil)
+                (org-agenda-entry-types
+                 '(:deadline))
+                (org-agenda-skip-function
+                 '(org-agenda-skip-entry-if `notregexp "\\* DEADLINE"))))
        (todo "WAITING"
              ((org-agenda-overriding-header "Waiting")
               (org-agenda-prefix-format "  ")))
        (todo "WHEN-FREE"
              ((org-agenda-overriding-header "Free Time")
               (org-agenda-prefix-format "  ")))
-       (todo "DEADLINE"
-             ((org-agenda-overriding-header "")
-              (org-agenda-overriding-header "Important Dates")
-              (org-agenda-prefix-format " %s ")))
        (todo "GET-DONE"
-             ((org-agenda-overriding-header "Get Done")
-              (org-agenda-prefix-format "  ")))
+             ((org-agenda-overriding-header "Not Scheduled & No Deadline")
+              (org-agenda-prefix-format "  ")
+              (org-agenda-skip-function
+               '(org-agenda-skip-entry-if 'deadline 'scheduled 'notregexp "\\* GET-DONE"))))
        (todo "UNSCHEDULED"
              ((org-agenda-overriding-header "Unplanned"))))
       nil)))
@@ -100,8 +111,8 @@
      (search . " %i %-12:c")))
  '(package-selected-packages
    '(undo-tree evil-matchit evil-exchange evil-args yasnippet evil-numbers
-               (\, hide-mode-line)
-               evil-snipe helm hydra buffer-move yaml-mode highlight-indentation eat web-mode expand-region dired-toggle-sudo rg calfw-org calfw-cal calfw evil-surround heaven-and-hell dired-launch workgroups2 cider xclip workgroups which-key use-package try textsize recentf-ext rainbow-delimiters python-black projectile popup peep-dired pdf-tools olivetti magit key-chord gdscript-mode evil-collection eglot company blacken async ace-window)))
+                  (\, hide-mode-line)
+                  evil-snipe helm hydra buffer-move yaml-mode highlight-indentation eat web-mode expand-region dired-toggle-sudo rg calfw-org calfw-cal calfw evil-surround heaven-and-hell dired-launch workgroups2 cider xclip workgroups which-key use-package try textsize recentf-ext rainbow-delimiters python-black projectile popup peep-dired pdf-tools olivetti magit key-chord gdscript-mode evil-collection eglot company blacken async ace-window)))
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -235,6 +246,7 @@
     evil-visual-state-cursor '("#a800e0" box)
     evil-normal-state-cursor '("#878787" box)
     evil-insert-state-cursor '("#e27300" box)
+    evil-replace-state-cursor '("red" box)
     evil-emacs-state-cursor '("#6666ff" box)
     )
 
@@ -398,6 +410,7 @@
 
 ;; = Insert state Bindings =
 (define-key evil-insert-state-map (kbd "C-g") `evil-normal-state)
+(define-key evil-replace-state-map (kbd "C-g") `evil-normal-state)
 
 (defun my-new-line-and-normal-state ()
   "Create a new and line and go to enter state"
@@ -517,11 +530,16 @@
 ;;                     :foreground "#444")
 
 ;; === --- ===
+
+
 ;; === Org-mode Configurations ===
 (global-set-key (kbd "C-c a") `org-agenda)
+(setq org-log-repeat nil)
+(setq org-todo-repeat-to-state "GET-DONE")
 (setq org-agenda-start-on-weekday nil)
 (setq org-agenda-files `("~/Documents/Dropbox/org/Deadlines.org"
        "~/Documents/Dropbox/org/Inbox.org"
+       ;; "~/Documents/Dropbox/org/Bills.org"
        "~/Documents/Dropbox/org/School.org"
        "~/Documents/Dropbox/org/Projects.org"
        "~/Documents/Dropbox/org/Appointments.org"
@@ -534,6 +552,7 @@
   ("PROJECT" . "#cf40cd")
   ("WAITING" . "#469DE9")
   ("NEXT" . "yellow")
+  ("AUTO-PAY" . "yellow")
   ("CANCELED" . "#663300")
   ("WHEN-FREE" . "#E79BE8")
    ))
@@ -566,6 +585,16 @@
 (require 'expand-region)
 (define-key evil-motion-state-map (kbd "S-SPC") 'er/expand-region)
 (define-key evil-visual-state-map (kbd "S-SPC") 'er/expand-region)
+
+(require 'expand-region-core)
+(require 'web-mode-expansions)
+(require 'html-mode-expansions)
+(require 'js-mode-expansions)
+(require 'css-mode-expansions)
+(require 'python-mode-expansions)
+(require 'yaml-mode-expansions)
+(require 'text-mode-expansions)
+(require 'the-org-mode-expansions)
 ;; ==
 
 (require `calfw)
