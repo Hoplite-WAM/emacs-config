@@ -227,7 +227,7 @@
   (interactive)
   (if (one-window-p)
       (kill-buffer)
-    (delete-other-windows)))
+    (delete-window)))
 
 (global-set-key (kbd "C-S-j")     'evil-window-down)
 (global-set-key (kbd "C-S-k")   'evil-window-up)
@@ -236,12 +236,13 @@
 (global-set-key (kbd "C-S-d")  'my-delete-other-windows)
 (global-set-key (kbd "C-S-y")  'split-window-horizontally)
 (global-set-key (kbd "C-S-g")  'dired-jump)
-;; Toggle Horizontal and Vertical Buffers function
+(global-set-key (kbd "C-S-m")  'helm-bookmarks)
 
 (winner-mode)
 (define-key winner-mode-map (kbd "C-S-u") `winner-undo)
 (define-key winner-mode-map (kbd "C-S-r") `winner-redo)
 
+;; Toggle Horizontal and Vertical Buffers function
 (defun window-split-toggle ()
   "Toggle between horizontal and vertical split with two windows."
   (interactive)
@@ -565,9 +566,13 @@
   "A"
   ("f" helm-recentf "Recent Files")
   ("t" eat "Terminal")
-  ("d" dired-jump "Dired")
+  ("g" dired-jump "Go to dired")
   ("a" (org-agenda nil "n") "Org Agenda (Custom View)")
   ("b" helm-buffers-list "Buffers")
-  ("k" helm-bookmarks "Bookmarks"))
+  ("m" helm-bookmarks "Bookmarks")
+  ("u" undo-tree-visualize "Undo tree"))
 
 (global-set-key (kbd "C-SPC") 'hydra-a/body)
+
+(global-set-key (kbd "C-SPC") 'hydra-a/body)
+(global-set-key (kbd "C-S-SPC") 'hydra-a/body)
