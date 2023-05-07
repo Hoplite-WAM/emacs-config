@@ -209,10 +209,15 @@
 (global-set-key (kbd "C-x C-d") `dired-jump)
 ;; Ability to move buffers relative to eachother
 (require `buffer-move)
-(global-set-key (kbd "C-S-k")     'buf-move-up)
-(global-set-key (kbd "C-S-j")   'buf-move-down)
-(global-set-key (kbd "C-S-h")   'buf-move-left)
-(global-set-key (kbd "C-S-l")  'buf-move-right)
+(global-set-key (kbd "C-S-m C-k")     'buf-move-up)
+(global-set-key (kbd "C-S-m C-j")   'buf-move-down)
+(global-set-key (kbd "C-S-m C-h")   'buf-move-left)
+(global-set-key (kbd "C-S-m C-l")  'buf-move-right)
+
+(global-set-key (kbd "C-S-k")     'evil-window-down)
+(global-set-key (kbd "C-S-j")   'evil-window-up)
+(global-set-key (kbd "C-S-h")   'evil-window-left)
+(global-set-key (kbd "C-S-l")  'evil-window-right)
 ;; Toggle Horizontal and Vertical Buffers function
 
 (winner-mode)
