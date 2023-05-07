@@ -37,6 +37,10 @@
 (global-hide-mode-line-mode)
 (global-flycheck-mode)
 (global-visual-line-mode)
+;; Enable visual line numbers mode globally
+(global-display-line-numbers-mode)
+;; Enable visual relative line numbers mode
+(setq display-line-numbers-type 'visual)
 ;; Very important! Sets tabs and indents to 2 globally!
 (setq-default tab-width 2)
 (setq standard-indent 2)
@@ -47,7 +51,11 @@
 ;; (require 'bookmark+)
 
 ;; === Helm ===
-(require `helm)
+(require 'helm)
+
+;; Define the helm-mark-ring variable
+(defvar helm-mark-ring nil)
+
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-s") 'helm-occur)
 (global-set-key (kbd "C-h a") 'helm-apropos)
@@ -121,9 +129,9 @@
      (tags . " %i %-12:c")
      (search . " %i %-12:c")))
  '(package-selected-packages
-   '(solarized-theme zenity-color-picker zeal-at-point undo-tree evil-matchit evil-exchange evil-args yasnippet evil-numbers
-                     (\, hide-mode-line)
-                     evil-snipe helm hydra buffer-move yaml-mode highlight-indentation eat web-mode expand-region dired-toggle-sudo rg calfw-org calfw-cal calfw evil-surround heaven-and-hell dired-launch workgroups2 cider xclip workgroups which-key use-package try textsize recentf-ext rainbow-delimiters python-black projectile popup peep-dired pdf-tools olivetti magit key-chord gdscript-mode evil-collection eglot company blacken async ace-window)))
+   '(use-package-hydra solarized-theme zenity-color-picker zeal-at-point undo-tree evil-matchit evil-exchange evil-args yasnippet evil-numbers
+                       (\, hide-mode-line)
+                       evil-snipe helm hydra buffer-move yaml-mode highlight-indentation eat web-mode expand-region dired-toggle-sudo rg calfw-org calfw-cal calfw evil-surround heaven-and-hell dired-launch workgroups2 cider xclip workgroups which-key use-package try textsize recentf-ext rainbow-delimiters python-black projectile popup peep-dired pdf-tools olivetti magit key-chord gdscript-mode evil-collection eglot company blacken async ace-window)))
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -214,10 +222,11 @@
 (global-set-key (kbd "C-S-m C-h")   'buf-move-left)
 (global-set-key (kbd "C-S-m C-l")  'buf-move-right)
 
-(global-set-key (kbd "C-S-k")     'evil-window-down)
-(global-set-key (kbd "C-S-j")   'evil-window-up)
+(global-set-key (kbd "C-S-j")     'evil-window-down)
+(global-set-key (kbd "C-S-k")   'evil-window-up)
 (global-set-key (kbd "C-S-h")   'evil-window-left)
 (global-set-key (kbd "C-S-l")  'evil-window-right)
+(global-set-key (kbd "C-S-d")  'delete-other-windows)
 ;; Toggle Horizontal and Vertical Buffers function
 
 (winner-mode)
@@ -290,7 +299,7 @@
 (define-key dired-mode-map (kbd "T") `dired-create-empty-file)
 
 (evil-define-key 'normal peep-dired-mode-map (kbd "<SPC>") 'peep-dired-scroll-page-down
-                                             (kbd "C-<SPC>") 'peep-dired-scroll-page-up
+                                             ;; (kbd "C-<SPC>") 'peep-dired-scroll-page-u
                                              (kbd "<backspace>") 'peep-dired-scroll-page-up
                                              (kbd "k") 'peep-dired-prev-file
                                              (kbd "j") 'peep-dired-next-file)
@@ -302,7 +311,7 @@
 
 ;; = Motion state Bindings =
 (define-key evil-motion-state-map (kbd "SPC") 'avy-goto-char-timer)
-(define-key evil-motion-state-map (kbd "C-SPC") `helm-buffers-list)
+;; (define-key evil-motion-state-map (kbd "C-SPC") `helm-buffers-list)
 (define-key evil-motion-state-map (kbd "|") `helm-global-mark-ring)
 (define-key evil-motion-state-map (kbd "\\") `helm-mark-ring)
 (define-key evil-motion-state-map (kbd "C-S-f") 'scroll-other-window)
@@ -389,6 +398,34 @@
 ;; bind evil-jump-out-args
 (define-key evil-normal-state-map "N" 'evil-jump-out-args)
 (define-key evil-normal-state-map "n" 'evil-jump-in-args)
+
+(defun my-evil-append-or-insert (orig-fun &rest args)
+  "Wrapper for `evil-append', `evil-append-line', `evil-insert', and
+   `evil-insert-line' that enters Emacs state afterwards."
+  (apply orig-fun args)
+  (evil-emacs-state))
+
+(advice-add #'evil-append :around #'my-evil-append-or-insert)
+(advice-add #'evil-append-line :around #'my-evil-append-or-insert)
+(advice-add #'evil-insert :around #'my-evil-append-or-insert)
+(advice-add #'evil-insert-line :around #'my-evil-append-or-insert)
+
+(define-key evil-normal-state-map "a" #'evil-append)
+(define-key evil-normal-state-map "A" #'evil-append-line)
+(define-key evil-normal-state-map "i" #'evil-insert)
+(define-key evil-normal-state-map "I" #'evil-insert-line)
+
+(define-key evil-visual-state-map "a" #'evil-append)
+(define-key evil-visual-state-map "A" #'evil-append-line)
+(define-key evil-visual-state-map "i" #'evil-insert)
+(define-key evil-visual-state-map "I" #'evil-insert-line)
+
+(define-key evil-motion-state-map "a" #'evil-append)
+(define-key evil-motion-state-map "A" #'evil-append-line)
+(define-key evil-motion-state-map "i" #'evil-insert)
+(define-key evil-motion-state-map "I" #'evil-insert-line)
+
+;; above same for insert and append
 
 (require `evil-args)
 (require `evil-exchange)
@@ -503,6 +540,7 @@
 ;; (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
 ;; ===
 
+
 ;; Start Server
 (server-start)
 (custom-set-faces
@@ -511,3 +549,16 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+
+(require 'hydra)
+(defhydra hydra-a (:color blue :columns 4)
+  "A"
+  ("f" helm-recentf "Recent Files")
+  ("t" eat "Terminal")
+  ("d" dired-jump "Dired")
+  ("a" (org-agenda nil "n") "Org Agenda (Custom View)")
+  ("b" helm-buffers-list "Buffers")
+  ("k" helm-bookmarks "Bookmarks"))
+
+(global-set-key (kbd "C-SPC") 'hydra-a/body)
