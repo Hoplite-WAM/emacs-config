@@ -222,11 +222,20 @@
 (global-set-key (kbd "C-S-m C-h")   'buf-move-left)
 (global-set-key (kbd "C-S-m C-l")  'buf-move-right)
 
+(defun my-delete-other-windows ()
+  "Delete all other windows except the current one. If there is only one window, kill the buffer."
+  (interactive)
+  (if (one-window-p)
+      (kill-buffer)
+    (delete-other-windows)))
+
 (global-set-key (kbd "C-S-j")     'evil-window-down)
 (global-set-key (kbd "C-S-k")   'evil-window-up)
 (global-set-key (kbd "C-S-h")   'evil-window-left)
 (global-set-key (kbd "C-S-l")  'evil-window-right)
-(global-set-key (kbd "C-S-d")  'delete-other-windows)
+(global-set-key (kbd "C-S-d")  'my-delete-other-windows)
+(global-set-key (kbd "C-S-y")  'split-window-horizontally)
+(global-set-key (kbd "C-S-g")  'dired-jump)
 ;; Toggle Horizontal and Vertical Buffers function
 
 (winner-mode)
