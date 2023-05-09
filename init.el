@@ -54,8 +54,7 @@
 (require 'helm)
 
 ;; Define the helm-mark-ring variable
-(defvar helm-mark-ring nil)
-
+;; (setq helm-move-to-line-cycle-in-source t)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-s") 'helm-occur)
 (global-set-key (kbd "C-h a") 'helm-apropos)
@@ -71,7 +70,9 @@
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 (setq helm-split-window-inside-p t)
 (helm-mode t)
+;; Add helm actions for wgrep occur in file search etc
 ;; === --- ===
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -129,9 +130,9 @@
      (tags . " %i %-12:c")
      (search . " %i %-12:c")))
  '(package-selected-packages
-   '(use-package-hydra solarized-theme zenity-color-picker zeal-at-point undo-tree evil-matchit evil-exchange evil-args yasnippet evil-numbers
-                       (\, hide-mode-line)
-                       evil-snipe helm hydra buffer-move yaml-mode highlight-indentation eat web-mode expand-region dired-toggle-sudo rg calfw-org calfw-cal calfw evil-surround heaven-and-hell dired-launch workgroups2 cider xclip workgroups which-key use-package try textsize recentf-ext rainbow-delimiters python-black projectile popup peep-dired pdf-tools olivetti magit key-chord gdscript-mode evil-collection eglot company blacken async ace-window)))
+   '(wgrep-helm use-package-hydra solarized-theme zenity-color-picker zeal-at-point undo-tree evil-matchit evil-exchange evil-args yasnippet evil-numbers
+                (\, hide-mode-line)
+                evil-snipe helm hydra buffer-move yaml-mode highlight-indentation eat web-mode expand-region dired-toggle-sudo rg calfw-org calfw-cal calfw evil-surround heaven-and-hell dired-launch workgroups2 cider xclip workgroups which-key use-package try textsize recentf-ext rainbow-delimiters python-black projectile popup peep-dired pdf-tools olivetti magit key-chord gdscript-mode evil-collection eglot company blacken async ace-window)))
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -217,10 +218,10 @@
 (global-set-key (kbd "C-x C-d") `dired-jump)
 ;; Ability to move buffers relative to eachother
 (require `buffer-move)
-(global-set-key (kbd "C-S-m C-k")     'buf-move-up)
-(global-set-key (kbd "C-S-m C-j")   'buf-move-down)
-(global-set-key (kbd "C-S-m C-h")   'buf-move-left)
-(global-set-key (kbd "C-S-m C-l")  'buf-move-right)
+(global-set-key (kbd "C-S-<up>")     'buf-move-up)
+(global-set-key (kbd "C-S-<down>")   'buf-move-down)
+(global-set-key (kbd "C-S-<left>")   'buf-move-left)
+(global-set-key (kbd "C-S-<right>")  'buf-move-right)
 
 (defun my-delete-other-windows ()
   "Delete all other windows except the current one. If there is only one window, kill the buffer."
@@ -229,14 +230,23 @@
       (kill-buffer)
     (delete-window)))
 
-(global-set-key (kbd "C-S-j")     'evil-window-down)
-(global-set-key (kbd "C-S-k")   'evil-window-up)
-(global-set-key (kbd "C-S-h")   'evil-window-left)
+(global-set-key (kbd "C-S-j")  'evil-window-down)
+(global-set-key (kbd "C-S-k")  'evil-window-up)
+(global-set-key (kbd "C-S-h")  'evil-window-left)
 (global-set-key (kbd "C-S-l")  'evil-window-right)
 (global-set-key (kbd "C-S-d")  'my-delete-other-windows)
+(global-set-key (kbd "C-S-x")  'delete-other-windows)
 (global-set-key (kbd "C-S-y")  'split-window-horizontally)
+(global-set-key (kbd "C->")  'helm-find-files)
+(global-set-key (kbd "C-S-i")  'helm-recentf)
+(global-set-key (kbd "C-<")  'helm-recentf)
 (global-set-key (kbd "C-S-g")  'dired-jump)
+(global-set-key (kbd "C-S-p")  'previous-buffer)
+(global-set-key (kbd "C-S-n")  'next-buffer)
+(global-set-key (kbd "C-S-o")  'helm-buffers-list)
+(global-set-key (kbd "C-:")  'helm-bookmarks)
 (global-set-key (kbd "C-S-m")  'helm-bookmarks)
+(global-set-key (kbd "C-S-s")  'helm-do-grep-ag)
 
 (winner-mode)
 (define-key winner-mode-map (kbd "C-S-u") `winner-undo)
@@ -322,8 +332,8 @@
 ;; = Motion state Bindings =
 (define-key evil-motion-state-map (kbd "SPC") 'avy-goto-char-timer)
 ;; (define-key evil-motion-state-map (kbd "C-SPC") `helm-buffers-list)
-(define-key evil-motion-state-map (kbd "|") `helm-global-mark-ring)
-(define-key evil-motion-state-map (kbd "\\") `helm-mark-ring)
+;; (define-key evil-motion-state-map (kbd "|") `helm-global-mark-ring)
+;; (define-key evil-motion-state-map (kbd "\\") `helm-mark-ring)
 (define-key evil-motion-state-map (kbd "C-S-f") 'scroll-other-window)
 (define-key evil-motion-state-map (kbd "C-S-b") 'scroll-other-window-down)
 (define-key evil-motion-state-map (kbd "RET") nil)
@@ -371,33 +381,13 @@
   (evil-args--forward-opener count))
 ;; == custom - function end ==
 
-;;  === Make emacs state basically be evil insert state ===
-(define-key evil-normal-state-map "i" 'evil-emacs-state)
+
+;; ;;  === Make emacs state basically be evil insert state ===
+(add-hook `evil-insert-state-entry-hook 'evil-emacs-state)
 (define-key evil-emacs-state-map (kbd "<escape>") 'evil-normal-state)
 (define-key evil-emacs-state-map (kbd "C-g") 'evil-normal-state)
-
-(defun my-evil-change-or-open-line (orig-fun &rest args)
-  "Wrapper for `evil-change', `evil-open-below', and `evil-open-above'
-   that enters Emacs state afterwards."
-  (apply orig-fun args)
-  (evil-emacs-state))
-
-(advice-add #'evil-change :around #'my-evil-change-or-open-line)
-(advice-add #'evil-open-below :around #'my-evil-change-or-open-line)
-(advice-add #'evil-open-above :around #'my-evil-change-or-open-line)
-
-(define-key evil-normal-state-map "c" #'evil-change)
-(define-key evil-visual-state-map "c" #'evil-change)
-(define-key evil-motion-state-map "c" #'evil-change)
-
-(define-key evil-normal-state-map "o" #'evil-open-below)
-(define-key evil-visual-state-map "o" #'evil-open-below)
-(define-key evil-motion-state-map "o" #'evil-open-below)
-
-(define-key evil-normal-state-map "O" #'evil-open-above)
-(define-key evil-visual-state-map "O" #'evil-open-above)
-(define-key evil-motion-state-map "O" #'evil-open-above)
-;; === ===
+(define-key evil-emacs-state-map (kbd "S-SPC") 'er/expand-region)
+;; ===
 
 ;; bind evil-forward/backward-args
 (define-key evil-normal-state-map "/" 'evil-forward-arg)
@@ -408,32 +398,6 @@
 ;; bind evil-jump-out-args
 (define-key evil-normal-state-map "N" 'evil-jump-out-args)
 (define-key evil-normal-state-map "n" 'evil-jump-in-args)
-
-(defun my-evil-append-or-insert (orig-fun &rest args)
-  "Wrapper for `evil-append', `evil-append-line', `evil-insert', and
-   `evil-insert-line' that enters Emacs state afterwards."
-  (apply orig-fun args)
-  (evil-emacs-state))
-
-(advice-add #'evil-append :around #'my-evil-append-or-insert)
-(advice-add #'evil-append-line :around #'my-evil-append-or-insert)
-(advice-add #'evil-insert :around #'my-evil-append-or-insert)
-(advice-add #'evil-insert-line :around #'my-evil-append-or-insert)
-
-(define-key evil-normal-state-map "a" #'evil-append)
-(define-key evil-normal-state-map "A" #'evil-append-line)
-(define-key evil-normal-state-map "i" #'evil-insert)
-(define-key evil-normal-state-map "I" #'evil-insert-line)
-
-(define-key evil-visual-state-map "a" #'evil-append)
-(define-key evil-visual-state-map "A" #'evil-append-line)
-(define-key evil-visual-state-map "i" #'evil-insert)
-(define-key evil-visual-state-map "I" #'evil-insert-line)
-
-(define-key evil-motion-state-map "a" #'evil-append)
-(define-key evil-motion-state-map "A" #'evil-append-line)
-(define-key evil-motion-state-map "i" #'evil-insert)
-(define-key evil-motion-state-map "I" #'evil-insert-line)
 
 ;; above same for insert and append
 
@@ -449,7 +413,7 @@
 (define-key evil-replace-state-map (kbd "C-g") `evil-normal-state)
 
 
-;; == Creates Marks for j and k greater than 1 line away
+;; ;; == Creates Marks for j and k greater than 1 line away
 ;; https://www.reddit.com/r/emacs/comments/8flkrg/evil_add_numbered_movement_to_the_jump_list/
 (defun my-jump-advice (oldfun &rest args)
   "Creates Marks for j and k greater than 1 line away"
@@ -461,6 +425,8 @@
 
 (advice-add 'evil-next-line :around #'my-jump-advice)
 (advice-add 'evil-previous-line :around #'my-jump-advice)
+(advice-add 'evil-next-visual-line :around #'my-jump-advice)
+(advice-add 'evil-previous-visual-line :around #'my-jump-advice)
 ;; == --- ==
 
 ;; === --- End of Evil Configuration --- ===
@@ -561,18 +527,19 @@
  )
 
 
-(require 'hydra)
-(defhydra hydra-a (:color blue :columns 4)
-  "A"
-  ("f" helm-recentf "Recent Files")
-  ("t" eat "Terminal")
-  ("g" dired-jump "Go to dired")
-  ("a" (org-agenda nil "n") "Org Agenda (Custom View)")
-  ("b" helm-buffers-list "Buffers")
-  ("m" helm-bookmarks "Bookmarks")
-  ("u" undo-tree-visualize "Undo tree"))
+;; (require 'hydra)
+;; (defhydra hydra-a (:color blue :columns 4)
+;;   "A"
+;;   ("f" helm-recentf "Recent Files")
+;;   ("t" eat "Terminal")
+;;   ("g" dired-jump "Go to dired")
+;;   ("a" (org-agenda nil "n") "Org Agenda (Custom View)")
+;;   ("b" helm-buffers-list "Buffers")
+;;   ("m" helm-bookmarks "Bookmarks")
+;;   ("u" undo-tree-visualize "Undo tree"))
 
-(global-set-key (kbd "C-SPC") 'hydra-a/body)
+;; (global-set-key (kbd "C-SPC") 'hydra-a/body)
+;; (global-set-key (kbd "C-S-SPC") 'hydra-a/body)
 
-(global-set-key (kbd "C-SPC") 'hydra-a/body)
-(global-set-key (kbd "C-S-SPC") 'hydra-a/body)
+(define-key evil-motion-state-map (kbd "\\") 'helm-all-mark-rings)
+(define-key evil-motion-state-map (kbd "|") 'evil-show-marks)
