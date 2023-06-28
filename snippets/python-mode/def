@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: def
-# key: def
+# key: d
 # --
 def ${1:name}($2):
-    $0
+    $3

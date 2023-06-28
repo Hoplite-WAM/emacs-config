@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Random Line
+# key: ra
+# --
+`(random-line-from-file $1)`

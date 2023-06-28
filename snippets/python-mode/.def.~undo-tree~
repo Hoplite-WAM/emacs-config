@@ -1,8 +1,12 @@
 (undo-tree-save-format-version . 1)
-"4136cab104e88e084e08b6ab2f66b64cb616018e"
+"193a0cc713ad26f1537c4bab396dbb818bb577d0"
 [nil nil nil nil (25595 60462 442208 472000) 0 nil]
 ([nil nil ((#("args" 0 4 (fontified t)) . 71) (undo-tree-id22 . -1) (undo-tree-id23 . -2) (undo-tree-id24 . -3) (undo-tree-id25 . -4) (undo-tree-id26 . -4) (t 25585 53475 512436 153000)) nil (25595 60462 442206 176000) 0 nil])
-([nil nil ((#("{" 0 1 (fontified t face (rainbow-delimiters-depth-2-face font-lock-keyword-face))) . 68) (undo-tree-id18 . -1) (undo-tree-id19 . -1) (undo-tree-id20 . 1) (undo-tree-id21 . -1)) nil (25595 60462 442199 611000) 0 nil])
+([nil nil ((#("{" 0 1 (face (rainbow-delimiters-depth-2-face font-lock-keyword-face) fontified t)) . 68) (undo-tree-id18 . -1) (undo-tree-id19 . -1) (undo-tree-id20 . 1) (undo-tree-id21 . -1)) nil (25595 60462 442199 611000) 0 nil])
 ([nil nil ((#(":" 0 1 (fontified t)) . 69) (undo-tree-id2 . -1) (undo-tree-id3 . -1) (undo-tree-id4 . -1) (undo-tree-id5 . -1) (undo-tree-id6 . -1) (undo-tree-id7 . -1) (undo-tree-id8 . -1) (undo-tree-id9 . -1) (undo-tree-id10 . -1) (undo-tree-id11 . -1) (undo-tree-id12 . -1) (undo-tree-id13 . -1) (undo-tree-id14 . -1) (undo-tree-id15 . -1) (undo-tree-id16 . -1) (undo-tree-id17 . -1)) nil (25595 60462 442192 48000) 0 nil])
-([nil current ((#("}" 0 1 (fontified t face (rainbow-delimiters-mismatched-face font-lock-keyword-face))) . 69) (undo-tree-id0 . 1) (undo-tree-id1 . -1)) nil (25595 60462 442169 762000) 0 nil])
+([nil nil ((#("}" 0 1 (face (rainbow-delimiters-mismatched-face font-lock-keyword-face) fontified t)) . 69) (undo-tree-id0 . 1) (undo-tree-id1 . -1)) nil (25595 60462 442169 762000) 0 nil])
+([nil nil ((#("def" 0 3 (fontified t face font-lock-comment-face)) . 44) (t 25595 60462 451126 101000)) nil (25692 15606 651518 936000) 0 nil])
+([nil nil ((44 . 45)) nil (25692 15606 651512 26000) 0 nil])
+([nil nil ((75 . 76) (t 25692 15606 660621 638000)) nil (25692 15643 820089 61000) 0 nil])
+([nil current ((#("0" 0 1 (fontified t face font-lock-string-face)) . 76) (undo-tree-id0 . -1) (undo-tree-id1 . 1) (undo-tree-id2 . -1) (undo-tree-id3 . -1) (undo-tree-id4 . -1) (undo-tree-id5 . -1) (undo-tree-id6 . -1) (undo-tree-id7 . -1) (undo-tree-id8 . -1) (undo-tree-id9 . -1) (undo-tree-id10 . -1) (undo-tree-id11 . -1) (undo-tree-id12 . -1) (undo-tree-id13 . -1)) nil (25692 15643 820082 557000) 0 nil])
 nil
