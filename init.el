@@ -41,7 +41,7 @@
 (global-flycheck-mode)
 (global-visual-line-mode)
 ;; Enable visual line numbers mode globally
-(global-display-line-numbers-mode)
+;; (global-display-line-numbers-mode)
 ;; Enable visual relative line numbers mode
 (setq display-line-numbers-type 'visual)
 ;; Very important! Sets tabs and indents to 2 globally!
@@ -139,59 +139,65 @@
  '(js-indent-level 2)
  '(org-agenda-custom-commands
    '(("n" "My Custom View"
-      ((todo "WAITING"
-             ((org-agenda-overriding-header "Waiting")
-              (org-agenda-prefix-format "  ")))
+      (
+       ;; (todo "WAITING"
+       ;;       ((org-agenda-overriding-header "Waiting")
+       ;;        (org-agenda-prefix-format "  ")))
        (agenda ""
-               ((org-agenda-span 5)
-                (org-deadline-warning-days 3)))
-       (agenda ""
-               ((org-agenda-overriding-header "Important Dates")
-                (org-agenda-span 1)
-                (org-deadline-warning-days 1000)
-                (org-agenda-show-all-dates nil)
-                (org-agenda-entry-types
-                 '(:deadline))
-                (org-agenda-skip-function
-                 '(org-agenda-skip-entry-if `notregexp "\\* DEADLINE"))))
-       (todo "GET-DONE"
-             ((org-agenda-overriding-header "Needs Scheduling or Deadline")
-              (org-agenda-prefix-format "  ")
-              (org-agenda-skip-function
-               '(org-agenda-skip-entry-if 'deadline 'scheduled 'notregexp "\\* GET-DONE"))))
-       (agenda ""
-               ((org-agenda-overriding-header "Appointments")
-                (org-agenda-span 1)
-                (org-deadline-warning-days 1000)
-                (org-agenda-show-all-dates nil)
-                (org-agenda-entry-types
-                 '(:deadline))
-                (org-agenda-skip-function
-                 '(org-agenda-skip-entry-if `notregexp "\\* APPOINTMENT"))))
-       (agenda ""
-               ((org-agenda-overriding-header "Bills")
-                (org-agenda-span 1)
-                (org-deadline-warning-days 50)
-                (org-agenda-show-all-dates nil)
-                (org-agenda-entry-types
-                 '(:deadline))
-                (org-agenda-skip-function
-                 '(org-agenda-skip-entry-if `notregexp "\\* BILL"))))
-       (todo "WHEN-FREE"
-             ((org-agenda-overriding-header "Free Time")
-              (org-agenda-prefix-format "  ")))
-       (todo "NOT-COMMITED"
-             ((org-agenda-overriding-header "Unplanned"))))
-      nil)))
+               ;; Day span for agenda view in custom
+               ((org-agenda-span 1)
+                (org-deadline-warning-days 30)))
+       ;; (agenda ""
+       ;;         ((org-agenda-overriding-header "Important Dates")
+       ;;          (org-agenda-span 1)
+       ;;          (org-deadline-warning-days 1000)
+       ;;          (org-agenda-show-all-dates nil)
+       ;;          (org-agenda-entry-types
+       ;;           '(:deadline))
+       ;;          (org-agenda-skip-function
+       ;;           '(org-agenda-skip-entry-if `notregexp "\\* DEADLINE"))))
+       ;; (todo "GET-DONE"
+       ;;       ((org-agenda-overriding-header "Needs Scheduling or Deadline")
+       ;;        (org-agenda-prefix-format "  ")
+       ;;        (org-agenda-skip-function
+       ;;         '(org-agenda-skip-entry-if 'deadline 'scheduled 'notregexp "\\* GET-DONE"))))
+       ;; (agenda ""
+       ;;         ((org-agenda-overriding-header "Appointments")
+       ;;          (org-agenda-span 1)
+       ;;          (org-deadline-warning-days 1000)
+       ;;          (org-agenda-show-all-dates nil)
+       ;;          (org-agenda-entry-types
+       ;;           '(:deadline))
+       ;;          (org-agenda-skip-function
+       ;;           '(org-agenda-skip-entry-if `notregexp "\\* APPOINTMENT"))))
+       ;; (agenda ""
+       ;;         ((org-agenda-overriding-header "Bills")
+       ;;          ;; Agenda View how many days to show
+       ;;          ;; (org-agenda-span 1)
+       ;;          (org-agenda-span 30)
+       ;;          (org-deadline-warning-days 50)
+       ;;          (org-agenda-show-all-dates nil)
+       ;;          (org-agenda-entry-types
+       ;;           '(:deadline))
+       ;;          (org-agenda-skip-function
+       ;;           '(org-agenda-skip-entry-if `notregexp "\\* BILL"))))
+       ;; (todo "WHEN-FREE"
+       ;;       ((org-agenda-overriding-header "Free Time")
+       ;;        (org-agenda-prefix-format "  ")))
+       ;; (todo "NOT-COMMITED"
+       ;;       ((org-agenda-overriding-header "Unplanned")))
+       )
+       nil)))
  '(org-agenda-prefix-format
    '((agenda . "--- %s %t - ")
      (todo . " %i %-12:c")
      (tags . " %i %-12:c")
      (search . " %i %-12:c")))
  '(package-selected-packages
-   '(obsidian jazz-theme cherry-blossom-theme devdocs wgrep-helm use-package-hydra solarized-theme zenity-color-picker zeal-at-point undo-tree evil-matchit evil-exchange evil-args yasnippet evil-numbers
-              (\, hide-mode-line)
-              evil-snipe helm hydra buffer-move yaml-mode highlight-indentation eat web-mode expand-region dired-toggle-sudo rg calfw-org calfw-cal calfw evil-surround heaven-and-hell dired-launch workgroups2 cider xclip workgroups which-key use-package try textsize recentf-ext rainbow-delimiters python-black projectile popup peep-dired pdf-tools olivetti magit key-chord gdscript-mode evil-collection eglot company blacken async ace-window)))
+   '(mixed-pitch deadgrep obsidian jazz-theme cherry-blossom-theme devdocs wgrep-helm use-package-hydra solarized-theme zenity-color-picker zeal-at-point undo-tree evil-matchit evil-exchange evil-args yasnippet evil-numbers
+                 (\, hide-mode-line)
+                 evil-snipe helm hydra buffer-move yaml-mode highlight-indentation eat web-mode expand-region dired-toggle-sudo rg calfw-org calfw-cal calfw evil-surround heaven-and-hell dired-launch workgroups2 cider xclip workgroups which-key use-package try textsize recentf-ext rainbow-delimiters python-black projectile popup peep-dired olivetti magit key-chord gdscript-mode evil-collection eglot company blacken async ace-window))
+ '(textsize-default-points 16))
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -210,6 +216,9 @@
 
 ;; === Major Mode Hooks ===
 
+(add-hook 'org-mode-hook 'goto-address-mode)
+(add-hook 'text-mode 'goto-address-mode)
+(add-hook 'markdown-mode 'goto-address-mode)
 
 ;; (add-hook 'org-agenda-after-show-hook’ 'evil-emacs-state)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -219,6 +228,7 @@
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
 (add-hook 'dired-mode-hook 'olivetti-mode)
 (add-hook 'dired-mode-hook (lambda () (dired-omit-mode)))
+(add-hook 'dired-mode-hook #'display-line-numbers-mode)
 (add-hook 'dired-mode 'peep-dired)
 (setq dired-dwim-target t)
 
@@ -253,7 +263,9 @@
 (add-hook `text-mode-hook `follow-mode)
 (add-hook `text-mode-hook `flyspell-mode)
 (add-hook `text-mode-hook `flyspell-buffer)
+(add-hook `text-mode-hook `mixed-pitch-mode)
 (add-hook `text-mode-hook `olivetti-mode)
+(add-hook `text-mode-hook `set-window-margins nil 10)
 ;; (add-hook `text-mode-hook `fringe-mode 0)
 
 ;; Yaml
@@ -261,6 +273,7 @@
                               (olivetti-mode -1)))
 (add-hook 'yaml-mode-hook 'highlight-indentation-mode)
 (add-hook 'yaml-mode-hook 'whitespace-mode)
+(add-hook 'yaml-mode-hook #'display-line-numbers-mode)
 (add-hook 'yaml-mode-hook
     (lambda()
       (add-hook 'evil-insert-state-exit-hook `delete-trailing-whitespace)))
@@ -318,16 +331,31 @@
 (global-set-key (kbd "C-#")  'split-window-horizontally)
 (global-set-key (kbd "C-)")  'kill-current-buffer-no-prompt)
 (global-set-key (kbd "C-S-e")  'helm-find-files)
+(global-set-key (kbd "C-S-q")  'deadgrep)
 ;; (global-set-key (kbd "C-)")  'helm-buffers-list)
 ;; (global-set-key (kbd "C-(")  'helm-bookmarks)
 (global-set-key (kbd "C-S-g")  'dired-jump)
-(global-set-key (kbd "C-S-p")  'previous-buffer)
-(global-set-key (kbd "C-S-n")  'next-buffer)
+;; (global-set-key (kbd "C-S-p")  'previous-buffer)
+;; (global-set-key (kbd "C-S-n")  'next-buffer)
+(global-set-key (kbd "C-S-p")  'tab-previous)
+(global-set-key (kbd "C-S-n")  'tab-next)
+(global-set-key (kbd "C->")  'tab-next)
+(global-set-key (kbd "C-<")  'tab-previous)
+(global-set-key (kbd "C-\"")  'my-tab-new)
+(global-set-key (kbd "C-:")  'tab-close)
+(global-set-key (kbd "C-(")  'tab-bar-close-other-tabs)
 (global-set-key (kbd "C-S-s")  'helm-do-grep-ag)
 
 (winner-mode)
 (define-key winner-mode-map (kbd "C-S-u") `winner-undo)
 (define-key winner-mode-map (kbd "C-S-r") `winner-redo)
+
+(defun my-tab-new ()
+  "automatically disable tab-bar mode on new tab"
+  (interactive)
+  (tab-new)
+  (tab-bar-mode 0)
+  )
 
 ;; Toggle Horizontal and Vertical Buffers function
 (defun window-split-toggle ()
@@ -564,12 +592,14 @@
 ;; (add-hook 'org-capture-after-finalize-hook 'save-some-buffers)
 (setq org-todo-repeat-to-state "GET-DONE")
 (setq org-agenda-start-on-weekday nil)
-(setq org-agenda-files `("~/Documents/Synced Documents/org/Deadlines.org"
-       "~/Documents/Synced Documents/org/Inbox.org"
+(setq org-agenda-files `(
+          ;; "~/Documents/Synced Documents/org/Deadlines.org"
+       ;; "~/Documents/Synced Documents/org/Inbox.org"
        "~/Documents/Synced Documents/org/School.org"
-       "~/Documents/Synced Documents/org/Projects.org"
-       "~/Documents/Synced Documents/org/Appointments.org"
-       "~/Documents/Synced Documents/org/Bills.org"
+       ;; "~/Documents/Synced Documents/org/Projects.org"
+       ;; "~/Documents/Synced Documents/org/Today-Scratch.org"
+       ;; "~/Documents/Synced Documents/org/Appointments.org"
+       ;; "~/Documents/Synced Documents/org/Bills.org"
        ))
 (setq org-todo-keywords
       '((sequence "WAITING" "APPOINTMENT" "DEADLINE" "BILL" "NOT-COMMITED" "WHEN-FREE" "GET-DONE" "NEXT" "PROJECT" "GOAL" "|" "DONE" "CANCELED")))
@@ -591,6 +621,8 @@
 (setq org-capture-templates
       '(("n" "Not Committed" entry (file+headline "~/Documents/Synced Documents/org/Inbox.org" "Tasks")
          "* NOT-COMMITED %?\n")
+        ("t" "Today to-do item" entry (file+headline "~/Documents/Synced Documents/org/Today-Scratch.org" "Tasks")
+         "* GET-DONE %?\n DEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))")
         ("e" "Get Done" entry (file+headline "~/Documents/Synced Documents/org/Inbox.org" "Tasks")
          "* GET-DONE %?\n")
         ("g" "Get Done - w Deadline" entry (file+headline "~/Documents/Synced Documents/org/Inbox.org" "Tasks")
@@ -707,3 +739,12 @@
 
 ;; Activate detection of Obsidian vault
 ;; (global-obsidian-mode t)
+
+
+(defun toggle-double-spacing ()
+  "Toggles visual double line spacing like in a document editor for editing text"
+  (interactive)
+(if (eq line-spacing nil)
+      (setq line-spacing 12)
+    (setq line-spacing nil))
+  (redraw-display))
